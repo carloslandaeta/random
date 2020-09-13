@@ -15,18 +15,27 @@ async function parseSerials(){
     await this.timeout(3000);
     // Copiar estatus
     newSerialStatus = document.querySelector("#clsDeviceHistoryContainer > div > div.row.current_results_container > span > div.curren_device_details > div:nth-child(1) > dl > dd:nth-child(4)").textContent.trim();
+    newSerialDate = document.querySelector("#tabRow > td.ng-scope.show-Date > span").textContent.trim();
+    newSerialNumber = document.querySelector("#tabRow > td.ng-scope.show-Subscriber > span").textContent.trim();
     // Mover a completado
     checked = document.querySelector("#checkedSerials").value;
     if(checked.length > 0){
         linebreak = '\n';
     }else{
-        linebreak = 'serial,status\n';
+        linebreak = 'serial,status,phone,act_date\n';
     }    
-    document.querySelector("#checkedSerials").value = checked + linebreak + newSerialsRows[i] +','+ newSerialStatus;
+    
+    if(i < (newSerialsRows.length - 1)){
+        document.querySelector("#checkedSerials").value = checked + linebreak + newSerialsRows[i] +',' + newSerialStatus + ',' + newSerialNumber + ',' + newSerialDate;
+        v = i;
+        v++;
+        document.querySelector("#currentCount").textContent = v;
+        document.querySelector("#toCount").textContent = newSerialsRows.length - 1;
+    }
     
     // Avisar que termino
     if(i == (newSerialsRows.length - 1)){
-            alert("Bache Completado");
+            alert("Bache Completado")    
         }
     }
 }
@@ -43,9 +52,8 @@ function runSerial(serial){
 }
 
 
-
 var html;
-html+= '<div style="position: fixed; top:60px;left:10px; display:block; width:18%; height:600px;background-color:#333;border: solid 1px #222;padding:20px;z-index:100"><h3 style="font-family: Arial; color:#FFF">Serials</h3><textarea style="width:100%;height:200px;padding:0;margin:0;" id="unCheckedSerials"></textarea><button onclick="parseSerials();">Go</button></div><div style="position: fixed; top:60px;right:10px; display:block; width:18%; height:600px;background-color:#333;border: solid 1px #222;padding:20px;z-index:100"><h3 style="font-family: Arial; color:#FFF">Current status</h3><textarea style="width:100%;height:200px;padding:0;margin:0;" id="checkedSerials"></textarea></div>';
+html+= '<div style="position: fixed; top:60px;left:0px; display:block; width:18%; height:600px;background-color:#333;border: solid 1px #222;padding:10px;z-index:100"><h3 style="font-family: Arial; color:#FFF">Serials</h3><textarea style="width:100%;height:200px;padding:0;margin:0;font-size:10px;font-family: Arial;" id="unCheckedSerials"></textarea><button onclick="parseSerials();">Go</button></div><div style="position: fixed; top:60px;right:0px; display:block; width:20%; height:600px;background-color:#333;border: solid 1px #222;padding:10px;z-index:100;"><h3 style="font-family: Arial; color:#FFF">Current status <span id="currentCount">0</span>/<span id="toCount">0</span></h3><textarea style="width:100%;height:200px;padding:0;margin:0;font-size:10px;font-family: Arial;" id="checkedSerials"></textarea></div>';
     
 var myDiv = document.createElement("div");
 //Set its unique ID.
@@ -54,4 +62,3 @@ myDiv.id = 'serialChecker';
 myDiv.innerHTML = html;
 //Finally, append the element to the HTML body
 document.body.appendChild(myDiv);
-    
